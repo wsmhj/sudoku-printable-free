@@ -1,62 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sudoku Printable</title>
-  <meta name="description" content="Free printable Sudoku puzzles. Generate and print Sudoku at any difficulty level.">
   <link rel="canonical" href="https://sudokuprintable.me/" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #1a1a1a; padding: 20px; }
-    .container { max-width: 420px; margin: 0 auto; }
-    h1 { font-size: 24px; margin-bottom: 8px; }
-    .subtitle { color: #666; margin-bottom: 24px; font-size: 14px; }
-    table { border-collapse: collapse; margin: 0 auto 20px; }
-    td { width: 36px; height: 36px; text-align: center; font-size: 16px; font-weight: 600; border: 1px solid #ccc; }
-    td:nth-child(3), td:nth-child(6) { border-right: 2px solid #333; }
-    tr:nth-child(3) td, tr:nth-child(6) td { border-bottom: 2px solid #333; }
-    .given { color: #333; }
-    .empty { color: #999; }
-    .full-version { display: block; text-align: center; margin-top: 24px; padding: 14px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; }
-    .full-version:hover { background: #1d4ed8; }
-    footer { margin-top: 32px; text-align: center; font-size: 12px; color: #999; }
-    footer a { color: #2563eb; }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; text-align: center; }
+    h1 { color: #2c3e50; }
+    table { border-collapse: collapse; margin: 20px auto; }
+    td { width: 40px; height: 40px; border: 1px solid #999; text-align: center; font-size: 18px; font-weight: bold; }
+    td.box-right { border-right: 3px solid #333; }
+    td.box-bottom { border-bottom: 3px solid #333; }
+    td.box-right.box-bottom { border-right: 3px solid #333; border-bottom: 3px solid #333; }
+    .given { color: #2c3e50; }
+    button { margin: 8px; padding: 10px 20px; background: #2980b9; color: #fff; border: none; cursor: pointer; border-radius: 4px; font-size: 15px; }
+    button:hover { background: #1a6ea8; }
+    .cta { display: inline-block; margin-top: 24px; padding: 12px 28px; background: #27ae60; color: #fff; text-decoration: none; border-radius: 4px; font-size: 16px; font-weight: bold; }
+    .cta:hover { background: #1e8449; }
+    footer { margin-top: 40px; font-size: 0.9em; color: #555; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Sudoku Printable</h1>
-    <p class="subtitle">Sample easy puzzle — print free at the full version</p>
-    <table id="board"></table>
-    <a class="full-version" href="https://sudokuprintable.me/">
-      Get Printable Sudoku Puzzles
-    </a>
-    <footer>
-      <p>Full version at <a href="https://sudokuprintable.me/">Sudoku Printable</a></p>
-    </footer>
-  </div>
+  <h1>Sudoku Printable</h1>
+  <p>Generate a free printable Sudoku puzzle instantly.</p>
+
+  <button onclick="generatePuzzle()">New Puzzle</button>
+  <button onclick="window.print()" style="background:#8e44ad;">Print</button>
+
+  <table id="sudoku"></table>
+
+  <br />
+  <a class="cta" href="https://sudokuprintable.me/">Sudoku Printable</a>
+
+  <footer>
+    <p>For more puzzles, visit <a href="https://sudokuprintable.me/">Sudoku Printable</a>.</p>
+  </footer>
+
   <script>
-    var puzzle = [
-      [5,3,0,0,7,0,0,0,0],
-      [6,0,0,1,9,5,0,0,0],
-      [0,9,8,0,0,0,0,6,0],
-      [8,0,0,0,6,0,0,0,3],
-      [4,0,0,8,0,3,0,0,1],
-      [7,0,0,0,2,0,0,0,6],
-      [0,6,0,0,0,0,2,8,0],
-      [0,0,0,4,1,9,0,0,5],
-      [0,0,0,0,8,0,0,7,9]
+    const sample = [
+      [5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],
+      [8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],
+      [0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]
     ];
-    var t = document.getElementById('board');
-    puzzle.forEach(function(row) {
-      var tr = t.insertRow();
-      row.forEach(function(cell) {
-        var td = tr.insertCell();
-        td.textContent = cell || '';
-        td.className = cell ? 'given' : 'empty';
-      });
-    });
+    function generatePuzzle() {
+      const table = document.getElementById('sudoku');
+      table.innerHTML = '';
+      for (let r = 0; r < 9; r++) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < 9; c++) {
+          const td = document.createElement('td');
+          let cls = '';
+          if (c === 2 || c === 5) cls += ' box-right';
+          if (r === 2 || r === 5) cls += ' box-bottom';
+          td.className = cls.trim();
+          if (sample[r][c]) { td.textContent = sample[r][c]; td.classList.add('given'); }
+          tr.appendChild(td);
+        }
+        table.appendChild(tr);
+      }
+    }
+    generatePuzzle();
   </script>
 </body>
 </html>
